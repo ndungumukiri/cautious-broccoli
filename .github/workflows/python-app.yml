@@ -17,7 +17,7 @@ jobs:
       run: |
         pip install -r ./requirements.txt
     - name: run script
-      run: python .scrapper.py
+      run: python ./scrapper.py
     - name: save doc
       uses: actions/upload-artifact@v4
       with:
