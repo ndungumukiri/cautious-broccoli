@@ -1,0 +1,33 @@
+name: scrapper
+on:
+  workflow_dispatch:
+permissions: 
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11.4"
+        cache: "pip"
+    - name: Install dependencies
+      run: |
+        pip install -r ./requirements.txt
+    - name: run script
+      run: python .scrapper.py
+    - name: save doc
+      uses: actions/upload-artifact@v4
+      with:
+          name: save-data
+          path: |
+            data/Jumiaproducts.csv
+    - name: Commit and Push changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add data/Jumiaproducts.csv
+        git commit -m "Add generated artifact"
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
