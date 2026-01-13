@@ -6,6 +6,7 @@ import time
 import random
 import datetime
 import os
+import pickle
 
 def scrap_page(url):
     response = requests.get(url)
@@ -78,15 +79,9 @@ def main():
         products, next_page_url = scrap_page(current_url)
         
         if products:
-            df = pd.DataFrame(products)
-            folder_path = "scripts/data"
-            if not os.path.exists(folder_path):
-                os.makedirs(folder_path)
-            
-                file_path = os.path.join(folder_path, "Jumiaproducts.csv")
-        
-                header = not os.path.exists(file_path)
-                df.to_csv(file_path, mode='a', index=False, header=header)
+
+            with open('data/Jumiaproducts.pkl', 'wb') as f:
+                pickle.dump(products, f)
 
         
         current_url = next_page_url
